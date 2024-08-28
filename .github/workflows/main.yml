@@ -31,17 +31,16 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
-          repository: https://github.com/vepadulano/root.git
+          repository: vepadulano/root
           ref: pip-install-root
           path: rootsrc
 
       - name: Run cibuildwheel build
-        working-directory: rootsrc
-        uses: pypa/cibuildwheel@v2.20.0
-        env:
-          CIBW_BUILD: cp312-manylinux_x86_64
-        with:
-          output-dir: ../wheelhouse
+        run: |
+          . /home/githubci/root-pip-action/actions-runner/venv/bin/activate
+          pushd rootsrc
+          cibuildwheel --output-dir ../wheelhouse --only cp312-manylinux_x86_64
+          popd
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
